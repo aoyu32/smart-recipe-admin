@@ -1,65 +1,13 @@
-<script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { Collection, Dish, SwitchButton, User } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
-import logoUrl from '@/assets/logo.png'
-import { fetchAdminProfile } from '@/apis/admin'
-import { clearAuth, getAdminUser, setAdminUser } from '@/utils/auth'
-
-const route = useRoute()
-const router = useRouter()
-
-const adminUser = ref(getAdminUser())
-const pageTitle = computed(() => route.meta.title || '后台管理')
-
-const menus = [
-  { path: '/users', label: '用户管理', icon: User },
-  { path: '/recipe-categories', label: '食谱分类管理', icon: Collection },
-  { path: '/recipes', label: '食谱信息管理', icon: Dish },
-]
-
-function syncAdminUser(event) {
-  adminUser.value = event?.detail ?? getAdminUser()
-}
-
-async function loadAdminProfile(showError = false) {
-  try {
-    const profile = await fetchAdminProfile()
-    setAdminUser({
-      ...getAdminUser(),
-      ...profile,
-      token: getAdminUser()?.token,
-    })
-  } catch (error) {
-    if (showError) {
-      ElMessage.error(error.message || '获取管理员信息失败')
-    }
-  }
-}
-
-function logout() {
-  clearAuth()
-  router.push('/login')
-}
-
-onMounted(() => {
-  window.addEventListener('admin-user-updated', syncAdminUser)
-  loadAdminProfile()
-})
-
-onUnmounted(() => {
-  window.removeEventListener('admin-user-updated', syncAdminUser)
-})
-</script>
-
 <template>
   <el-container class="layout-shell">
     <el-aside class="layout-aside" width="248px">
       <div class="brand-block">
         <img :src="logoUrl" alt="logo" class="brand-logo" />
         <div>
-          <div class="brand-title"><span style="color: #037E44;">食谱</span><span style="color: #F97804;">小智</span></div>
+          <div class="brand-title">
+            <span style="color: #037e44">食谱</span>
+            <span style="color: #f97804">小智</span>
+          </div>
           <div class="brand-subtitle">后台管理系统</div>
         </div>
       </div>
@@ -99,7 +47,60 @@ onUnmounted(() => {
     </el-container>
   </el-container>
 </template>
+<script setup>
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Collection, Dish, SwitchButton, User } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import logoUrl from '@/assets/logo.png'
+import { fetchAdminProfile } from '@/apis/admin'
+import { clearAuth, getAdminUser, setAdminUser } from '@/utils/auth'
 
+const route = useRoute()
+const router = useRouter()
+
+const adminUser = ref(getAdminUser())
+const pageTitle = computed(() => route.meta.title || '后台管理')
+
+const menus = [
+  { path: '/users', label: '用户管理', icon: User },
+  { path: '/recipe-categories', label: '食谱分类管理', icon: Collection },
+  { path: '/recipes', label: '食谱信息管理', icon: Dish }
+]
+
+function syncAdminUser(event) {
+  adminUser.value = event?.detail ?? getAdminUser()
+}
+
+async function loadAdminProfile(showError = false) {
+  try {
+    const profile = await fetchAdminProfile()
+    setAdminUser({
+      ...getAdminUser(),
+      ...profile,
+      token: getAdminUser()?.token
+    })
+  } catch (error) {
+    if (showError) {
+      ElMessage.error(error.message || '获取管理员信息失败')
+    }
+  }
+}
+
+function logout() {
+  clearAuth()
+  router.push('/login')
+}
+
+onMounted(() => {
+  window.addEventListener('admin-user-updated', syncAdminUser)
+  loadAdminProfile()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('admin-user-updated', syncAdminUser)
+})
+</script>
 <style scoped>
 .layout-shell {
   min-height: 100vh;

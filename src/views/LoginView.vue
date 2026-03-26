@@ -1,3 +1,63 @@
+<template>
+  <div class="login-page">
+    <div class="login-bg login-bg-left"></div>
+    <div class="login-bg login-bg-right"></div>
+
+    <div class="login-card page-card">
+      <div class="login-brand">
+        <img :src="logoUrl" alt="logo" class="login-logo" />
+        <div>
+          <div class="login-system">
+            <span style="color: #037e44">食推</span>
+            <span style="color: #f97804">小智</span>
+            后台管理系统
+          </div>
+          <div class="login-desc">个性化食谱推荐微信小程序统一信息维护平台</div>
+        </div>
+      </div>
+
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        label-position="top"
+        size="large"
+        @keyup.enter="handleLogin"
+      >
+        <el-form-item label="管理员账号" prop="username">
+          <el-input v-model="form.username" placeholder="请输入管理员账号">
+            <template #prefix>
+              <el-icon><User /></el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="管理员密码" prop="password">
+          <el-input
+            v-model="form.password"
+            type="password"
+            show-password
+            placeholder="请输入管理员密码"
+          >
+            <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+
+        <el-button
+          type="primary"
+          size="large"
+          class="login-button"
+          :loading="loading"
+          @click="handleLogin"
+        >
+          登录后台
+        </el-button>
+      </el-form>
+    </div>
+  </div>
+</template>
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -13,12 +73,12 @@ const formRef = ref()
 
 const form = reactive({
   username: 'admin@spxz.com',
-  password: '123456',
+  password: '123456'
 })
 
 const rules = {
   username: [{ required: true, message: '请输入管理员账号', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入管理员密码', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入管理员密码', trigger: 'blur' }]
 }
 
 async function handleLogin() {
@@ -35,46 +95,6 @@ async function handleLogin() {
   }
 }
 </script>
-
-<template>
-  <div class="login-page">
-    <div class="login-bg login-bg-left"></div>
-    <div class="login-bg login-bg-right"></div>
-
-    <div class="login-card page-card">
-      <div class="login-brand">
-        <img :src="logoUrl" alt="logo" class="login-logo" />
-        <div>
-          <div class="login-system"><span style="color: #037E44;">食推</span><span style="color: #F97804;">小智</span>后台管理系统</div>
-          <div class="login-desc">个性化食谱推荐微信小程序统一信息维护平台</div>
-        </div>
-      </div>
-
-      <el-form ref="formRef" :model="form" :rules="rules" label-position="top" size="large" @keyup.enter="handleLogin">
-        <el-form-item label="管理员账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入管理员账号">
-            <template #prefix>
-              <el-icon><User /></el-icon>
-            </template>
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="管理员密码" prop="password">
-          <el-input v-model="form.password" type="password" show-password placeholder="请输入管理员密码">
-            <template #prefix>
-              <el-icon><Lock /></el-icon>
-            </template>
-          </el-input>
-        </el-form-item>
-
-        <el-button type="primary" size="large" class="login-button" :loading="loading" @click="handleLogin">
-          登录后台
-        </el-button>
-      </el-form>
-    </div>
-  </div>
-</template>
-
 <style scoped>
 .login-page {
   position: relative;
